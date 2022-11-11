@@ -1,0 +1,22 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'spec/**/*'
+
+####################################
+## Customization for this project ##
+####################################
+
+Style/Documentation:
+  Enabled: false
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 28
+
+Metrics/MethodLength:
+  Max: 15
