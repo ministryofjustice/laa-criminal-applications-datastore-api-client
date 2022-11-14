@@ -9,8 +9,9 @@ RSpec.describe DatastoreApi::Responses::ApplicationResult do
         described_class::FIELDS
       ).to eq(%w[
         id
+        usn
         status
-        version
+        schema_version
         created_at
         submitted_at
         date_stamp

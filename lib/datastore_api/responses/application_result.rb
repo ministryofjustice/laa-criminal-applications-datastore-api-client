@@ -5,8 +5,9 @@ module DatastoreApi
     class ApplicationResult
       FIELDS = %w[
         id
+        usn
         status
-        version
+        schema_version
         created_at
         submitted_at
         date_stamp
