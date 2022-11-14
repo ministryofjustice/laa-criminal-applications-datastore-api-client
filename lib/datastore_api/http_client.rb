@@ -49,7 +49,7 @@ module DatastoreApi
     end
 
     def handle_response(response)
-      parsed_body = JSON.parse(response.body)
+      parsed_body = JSON.parse(response.body, object_class: OpenStruct)
       status_code = response.status
 
       raise_error!(parsed_body, status_code) unless response.success?

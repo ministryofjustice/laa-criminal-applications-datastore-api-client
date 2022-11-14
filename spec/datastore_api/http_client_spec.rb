@@ -56,7 +56,10 @@ RSpec.describe DatastoreApi::HttpClient do
       }
 
       it 'executes the GET request to the given href, passing query params' do
-        expect(subject.get('/test')).to eq(body)
+        result = subject.get('/test')
+
+        expect(result).to be_an(OpenStruct)
+        expect(result.foo).to eq('bar')
       end
     end
 
@@ -72,7 +75,7 @@ RSpec.describe DatastoreApi::HttpClient do
       it 'raises a custom exception, propagating the status code and returned body' do
         expect {
           subject.get('/test')
-        }.to raise_error(DatastoreApi::Errors::NotFoundError, { "error" => "not found", "http_code" => 404}.to_s)
+        }.to raise_error(DatastoreApi::Errors::NotFoundError, { error: 'not found', http_code: 404}.to_s)
       end
     end
 
@@ -109,7 +112,10 @@ RSpec.describe DatastoreApi::HttpClient do
       }
 
       it 'executes the POST request to the given href, passing the payload' do
-        expect(subject.post('/test', payload)).to eq(body)
+        result = subject.post('/test', payload)
+
+        expect(result).to be_an(OpenStruct)
+        expect(result.foo).to eq('bar')
       end
     end
   end

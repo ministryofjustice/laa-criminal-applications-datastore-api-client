@@ -12,6 +12,9 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
+Style/OpenStructUse:
+  Enabled: false
+
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 

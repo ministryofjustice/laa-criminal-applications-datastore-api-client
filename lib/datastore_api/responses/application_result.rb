@@ -16,7 +16,15 @@ module DatastoreApi
         interests_of_justice
       ].freeze
 
+      DATE_FIELDS = %w[
+        created_at
+        submitted_at
+        date_stamp
+      ].freeze
+
       attr_reader(*FIELDS)
+
+      alias applicant client_details
 
       # Instantiate an application result
       #
@@ -27,7 +35,21 @@ module DatastoreApi
       #
       def initialize(response)
         FIELDS.each do |field|
-          instance_variable_set(:"@#{field}", response.fetch(field, nil))
+          value = response[field]
+
+          instance_variable_set(
+            :"@#{field}", parsed_value(field, value)
+          )
+        end
+      end
+
+      private
+
+      def parsed_value(field, value)
+        if value.is_a?(String) && DATE_FIELDS.include?(field)
+          DateTime.iso8601(value)
+        else
+          value
         end
       end
     end

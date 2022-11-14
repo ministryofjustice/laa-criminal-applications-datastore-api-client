@@ -4,8 +4,8 @@ RSpec.describe DatastoreApi::Errors do
   subject { Class.new { extend DatastoreApi::Errors } }
 
   describe '#raise_error!' do
-    let(:dummy_body) { { 'body' => 'foobar' } }
-    let(:expected_msg) { dummy_body.merge('http_code' => status).to_s }
+    let(:dummy_body) { OpenStruct.new({ 'body' => 'foobar' }) }
+    let(:expected_msg) { dummy_body.to_h.merge(http_code: status).to_s }
 
     context 'BadRequest error' do
       let(:status) { 400 }
