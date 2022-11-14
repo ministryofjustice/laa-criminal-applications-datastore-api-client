@@ -1,8 +1,4 @@
 shared_examples 'an API request' do
-  it 'wraps the response in an ApplicationResult' do
-    expect(subject.call).to be_a(DatastoreApi::Responses::ApplicationResult)
-  end
-
   describe '#http_client' do
     before do
       allow(subject).to receive(:http_client).and_call_original

@@ -8,10 +8,14 @@ require_relative 'datastore_api/configuration'
 require_relative 'datastore_api/errors'
 require_relative 'datastore_api/http_client'
 
+require_relative 'datastore_api/decorators/paginated_collection'
+
 require_relative 'datastore_api/traits/api_request'
+require_relative 'datastore_api/traits/paginated_response'
 
 require_relative 'datastore_api/requests/create_application'
 require_relative 'datastore_api/requests/get_application'
+require_relative 'datastore_api/requests/list_applications'
 
 require_relative 'datastore_api/responses/application_result'
 

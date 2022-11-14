@@ -6,6 +6,7 @@ Currently it supports:
 
 * Create an application (submission)
 * Get an application by its ID
+* Get all application filtered by status, optionally paginated
 
 It will support more operations in the future, as we need them.
 
@@ -65,6 +66,17 @@ response = DatastoreApi::Requests::GetApplication.new(
 ```
 
 This, as with the create action, will return a `Responses::ApplicationResult` class with the API response mapped to instance attributes.
+
+### Retrieving all applications by status
+
+```ruby
+response = DatastoreApi::Requests::ListApplications.new(
+  status: :submitted
+).call
+```
+
+The response is slightly different. It will return a collection of `Responses::ApplicationResult`, but additionally it includes a `#pagination` method to obtain the pagination metadata.
+
 
 ## Development
 

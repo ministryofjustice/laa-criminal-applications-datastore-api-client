@@ -26,6 +26,10 @@ RSpec.describe DatastoreApi::Requests::GetApplication do
 
     it_behaves_like 'an API request'
 
+    it 'wraps the response in an ApplicationResult' do
+      expect(subject.call).to be_a(DatastoreApi::Responses::ApplicationResult)
+    end
+
     context 'endpoint' do
       it 'gets the correct endpoint' do
         expect(http_client).to receive(:get).with('/applications/xyz-123')
