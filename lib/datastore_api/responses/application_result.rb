@@ -19,6 +19,7 @@ module DatastoreApi
 
       DATE_FIELDS = %w[
         created_at
+        updated_at
         submitted_at
         date_stamp
       ].freeze
@@ -47,7 +48,9 @@ module DatastoreApi
       private
 
       def parsed_value(field, value)
-        if value.is_a?(String) && DATE_FIELDS.include?(field)
+        if value.respond_to?(:each_pair)
+          value.each_pair { |k, v| value[k] = parsed_value(k.to_s, v) }
+        elsif value.is_a?(String) && DATE_FIELDS.include?(field)
           DateTime.iso8601(value)
         else
           value

@@ -29,6 +29,7 @@ RSpec.describe DatastoreApi::Responses::ApplicationResult do
         described_class::DATE_FIELDS
       ).to eq(%w[
         created_at
+        updated_at
         submitted_at
         date_stamp
       ])
@@ -56,6 +57,25 @@ RSpec.describe DatastoreApi::Responses::ApplicationResult do
 
         it 'parses the date string' do
           expect(subject.submitted_at).to be_a(DateTime)
+        end
+      end
+
+      context 'parse values recursively' do
+        let(:response) do
+          {
+            'id' => 12345,
+            'submitted_at' => '2022-11-11T15:36:09.000+00:00',
+            'client_details' => {
+              'created_at' => '2022-11-16T11:27:27.920Z',
+              'updated_at' => '2022-11-16T11:32:39.376Z',
+            }
+          }
+        end
+
+        it 'parses the date strings' do
+          expect(subject.submitted_at).to be_a(DateTime)
+          expect(subject.client_details['created_at']).to be_a(DateTime)
+          expect(subject.client_details['updated_at']).to be_a(DateTime)
         end
       end
     end
