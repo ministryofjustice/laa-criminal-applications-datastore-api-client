@@ -46,26 +46,27 @@ There are several options you can configure, like open and read timeouts, loggin
 
 ```ruby
 response = DatastoreApi::Requests::CreateApplication.new(
-  payload: { id: '12345', status: 'submitted', ... }
+  payload: { id: 'uuid', reference: 12345, status: 'submitted', ... }
 ).call
 ```
 
-This will return a `Responses::ApplicationResult` class with the API response mapped to instance attributes. For example:
+This will return a `Responses::ApplicationResult` class with the API response. A few basic attributes will be mapped to instance attributes. The rest can be obtained with bracket syntax. For example:
 
 ```ruby
-response.id # "12345"
-response.status # "submitted"
+response.id # "uuid"
+response.reference # 12345
+response['status'] # "submitted"
 ```
 
 ### Retrieving an application
 
 ```ruby
 response = DatastoreApi::Requests::GetApplication.new(
-  application_id: '12345'
+  application_id: 'uuid'
 ).call
 ```
 
-This, as with the create action, will return a `Responses::ApplicationResult` class with the API response mapped to instance attributes.
+This, as with the create action, will return a `Responses::ApplicationResult` class.
 
 ### Retrieving all applications by status
 
