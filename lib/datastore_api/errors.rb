@@ -3,7 +3,7 @@
 module DatastoreApi
   module Errors
     def raise_error!(response_body, status_code)
-      message = response_body.to_h.merge(http_code: status_code)
+      message = response_body.merge('http_code' => status_code)
 
       case status_code
       when 400 then raise BadRequest, message

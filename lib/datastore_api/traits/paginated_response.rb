@@ -7,11 +7,11 @@ module DatastoreApi
       RESULTS_OBJECT = 'records'
 
       def paginated_response(response, result_class: Responses::ApplicationResult)
-        results = response[RESULTS_OBJECT].map do |object|
+        results = response.fetch(RESULTS_OBJECT, []).map do |object|
           result_class.new(object)
         end
 
-        pagination = response[PAGINATION_OBJECT]
+        pagination = response.fetch(PAGINATION_OBJECT, {})
 
         Decorators::PaginatedCollection.new(results, pagination)
       end

@@ -2,59 +2,27 @@
 
 module DatastoreApi
   module Responses
-    class ApplicationResult
+    class ApplicationResult < SimpleDelegator
+      # Just a few basic attributes for quick access
       FIELDS = %w[
         id
-        usn
-        status
+        reference
         schema_version
-        created_at
-        submitted_at
-        date_stamp
-        provider_details
-        client_details
-        case_details
-        interests_of_justice
-      ].freeze
-
-      DATE_FIELDS = %w[
-        created_at
-        updated_at
-        submitted_at
-        date_stamp
       ].freeze
 
       attr_reader(*FIELDS)
 
-      alias applicant client_details
-
       # Instantiate an application result
       #
-      # @param response [Hash] The API response for the operation, currently
-      #   create an application, or get an existing application by ID
-      #
+      # @param response [Hash] The API response for the operation
       # @return [DatastoreApi::Responses::ApplicationResult] instance
       #
       def initialize(response)
         FIELDS.each do |field|
-          value = response[field]
-
-          instance_variable_set(
-            :"@#{field}", parsed_value(field, value)
-          )
+          instance_variable_set(:"@#{field}", response[field])
         end
-      end
 
-      private
-
-      def parsed_value(field, value)
-        if value.respond_to?(:each_pair)
-          value.each_pair { |k, v| value[k] = parsed_value(k.to_s, v) }
-        elsif value.is_a?(String) && DATE_FIELDS.include?(field)
-          DateTime.iso8601(value)
-        else
-          value
-        end
+        super
       end
     end
   end
