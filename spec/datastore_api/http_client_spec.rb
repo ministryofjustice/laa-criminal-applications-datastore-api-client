@@ -136,4 +136,26 @@ RSpec.describe DatastoreApi::HttpClient do
       end
     end
   end
+
+  # Note: not testing the exceptions as these behave exactly the same as
+  # in the GET requests. Refer to the above scenarios.
+  #
+  describe '#delete' do
+    context 'for a successful request' do
+      let(:body) { { 'foo' => 'bar' } }
+
+      let(:request_stub) {
+        Faraday::Adapter::Test::Stubs.new do |stub|
+          stub.delete('/api/v1/test') do |env|
+            check_env(env)
+            [200, {}, body.to_json]
+          end
+        end
+      }
+
+      it 'executes the DELETE request to the given href' do
+        expect(subject.delete('/test')).to eq(body)
+      end
+    end
+  end
 end

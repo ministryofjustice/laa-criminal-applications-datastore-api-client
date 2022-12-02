@@ -30,6 +30,12 @@ module DatastoreApi
       end
     end
 
+    def delete(href, query = {})
+      execute_request!(:delete, href) do |req|
+        req.params.update(query)
+      end
+    end
+
     private
 
     def config
