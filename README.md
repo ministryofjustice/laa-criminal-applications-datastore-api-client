@@ -7,8 +7,10 @@ Currently it supports:
 * Create an application (submission)
 * Get an application by its ID
 * Get all application filtered by status, optionally paginated
+* Update an application by its ID, providing a payload with attributes to update
+* Delete an application by its ID
 
-It will support more operations in the future, as we need them.
+It will support more operations in the future, or extend the existing ones, as we need them.
 
 ## Installation
 
@@ -36,8 +38,11 @@ DatastoreApi.configure do |config|
 
   config.basic_auth_username = ENV.fetch('DATASTORE_AUTH_USERNAME', nil)
   config.basic_auth_password = ENV.fetch('DATASTORE_AUTH_PASSWORD', nil)
-end
 
+  # You can customise the logger/level, for example:
+  config.logger = Logger.new(STDOUT)
+  config.logger.level = Logger::WARN
+end
 ````
 
 There are several options you can configure, like open and read timeouts, logging, and more. Please refer to the [Configuration class](lib/datastore_api/configuration.rb) for more details.
@@ -78,6 +83,19 @@ response = DatastoreApi::Requests::ListApplications.new(
 
 The response is slightly different. It will return a collection of `Responses::ApplicationResult`, but additionally it includes a `#pagination` method to obtain the pagination metadata.
 
+### Other operations
+
+```ruby
+# To update an existing application
+DatastoreApi::Requests::UpdateApplication.new(
+  application_id: 'uuid', payload: { status: :returned }
+).call
+
+# To delete an existing application
+DatastoreApi::Requests::DeleteApplication.new(
+  application_id: 'uuid'
+).call
+```
 
 ## Development
 
