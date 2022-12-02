@@ -113,4 +113,27 @@ RSpec.describe DatastoreApi::HttpClient do
       end
     end
   end
+
+  # Note: not testing the exceptions as these behave exactly the same as
+  # in the GET requests. Refer to the above scenarios.
+  #
+  describe '#put' do
+    context 'for a successful request' do
+      let(:body) { { 'foo' => 'bar' } }
+      let(:payload) { { 'name' => 'John Doe' } }
+
+      let(:request_stub) {
+        Faraday::Adapter::Test::Stubs.new do |stub|
+          stub.put('/api/v1/test') do |env|
+            check_env(env)
+            [201, {}, body.to_json]
+          end
+        end
+      }
+
+      it 'executes the PUT request to the given href, passing the payload' do
+        expect(subject.put('/test', payload)).to eq(body)
+      end
+    end
+  end
 end

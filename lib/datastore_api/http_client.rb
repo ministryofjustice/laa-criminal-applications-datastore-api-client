@@ -12,9 +12,6 @@ module DatastoreApi
       @options = options
     end
 
-    # Only GET and POST verbs are used currently, but more
-    # verbs can be easily added as needed.
-
     def get(href, query = {})
       execute_request!(:get, href) do |req|
         req.params.update(query)
@@ -23,6 +20,12 @@ module DatastoreApi
 
     def post(href, payload = {})
       execute_request!(:post, href) do |req|
+        req.body = JSON.dump(payload)
+      end
+    end
+
+    def put(href, payload)
+      execute_request!(:put, href) do |req|
         req.body = JSON.dump(payload)
       end
     end

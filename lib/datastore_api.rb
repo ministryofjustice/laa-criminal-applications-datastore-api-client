@@ -16,6 +16,7 @@ require_relative 'datastore_api/traits/paginated_response'
 require_relative 'datastore_api/requests/create_application'
 require_relative 'datastore_api/requests/get_application'
 require_relative 'datastore_api/requests/list_applications'
+require_relative 'datastore_api/requests/update_application'
 
 require_relative 'datastore_api/responses/application_result'
 
