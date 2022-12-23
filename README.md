@@ -95,6 +95,12 @@ DatastoreApi::Requests::UpdateApplication.new(
 DatastoreApi::Requests::DeleteApplication.new(
   application_id: 'uuid'
 ).call
+
+# Search applications, optionally paginated
+DatastoreApi::Requests::SearchApplications.new(
+  search_text: 'John', 
+  pagination: { per_page: 5, page: 2 }
+).call
 ```
 
 ## Development
