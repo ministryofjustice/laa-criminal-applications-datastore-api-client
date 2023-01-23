@@ -5,24 +5,26 @@ module DatastoreApi
     class UpdateApplication
       include Traits::ApiRequest
 
-      attr_reader :application_id, :payload
+      attr_reader :application_id, :payload, :member
 
       # Instantiate a new application to be updated
       #
       # @param application_id [String] The application UUID to retrieve
       # @param payload [Hash] All properties to be sent in the payload
+      # @param member [Symbol] Member route. Optional
       #
       # @raise [ArgumentError] if +application_id+ is missing or +nil+
       # @raise [ArgumentError] if +payload+ is missing or +nil+
       #
       # @return [DatastoreApi::Requests::UpdateApplication] instance
       #
-      def initialize(application_id:, payload:)
+      def initialize(application_id:, payload:, member: nil)
         raise ArgumentError, '`application_id` cannot be nil' unless application_id
         raise ArgumentError, '`payload` cannot be nil' unless payload
 
         @application_id = application_id
         @payload = payload
+        @member = member
       end
 
       # Update an existing application
@@ -38,8 +40,14 @@ module DatastoreApi
 
       def endpoint
         format(
-          '/applications/%<application_id>s', application_id: application_id
+          '/applications/%<resource_path>s', resource_path: resource_path
         )
+      end
+
+      private
+
+      def resource_path
+        [application_id, member].compact.join('/')
       end
     end
   end
