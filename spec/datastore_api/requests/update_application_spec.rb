@@ -29,6 +29,17 @@ RSpec.describe DatastoreApi::Requests::UpdateApplication do
         expect(http_client).to receive(:put).with('/applications/xyz-123', any_args)
         subject.call
       end
+
+      context 'when a `member` is provided' do
+        let(:args) do
+          { application_id: 'xyz-123', payload: {}, member: :revoke }
+        end
+
+        it 'puts to the correct endpoint' do
+          expect(http_client).to receive(:put).with('/applications/xyz-123/revoke', any_args)
+          subject.call
+        end
+      end
     end
 
     context 'payload' do
