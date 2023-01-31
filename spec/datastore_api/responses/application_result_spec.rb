@@ -9,6 +9,7 @@ RSpec.describe DatastoreApi::Responses::ApplicationResult do
         described_class::FIELDS
       ).to eq(%w[
         id
+        status
         reference
         schema_version
       ])
@@ -17,15 +18,16 @@ RSpec.describe DatastoreApi::Responses::ApplicationResult do
 
   describe '.new' do
     context 'delegation' do
-      let(:response) {
-        { 'id' => 'uuid', 'reference' => 12345, 'status' => 'submitted' }
-      }
+      let(:response) do
+        { 'id' => 'uuid', 'reference' => 12345, 'status' => 'submitted', 'schema_version' => 1.0 }
+      end
 
       it 'assigns basic attributes, delegates the rest' do
         expect(subject.id).to eq('uuid')
+        expect(subject.status).to eq('submitted')
         expect(subject.reference).to eq(12345)
+        expect(subject.schema_version).to eq(1.0)
 
-        expect(subject['status']).to eq('submitted')
         expect(subject['client_details']).to be_nil
       end
     end
