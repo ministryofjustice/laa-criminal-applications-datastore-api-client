@@ -6,6 +6,7 @@ module DatastoreApi
       # Just a few basic attributes for quick access
       FIELDS = %w[
         id
+        status
         reference
         schema_version
       ].freeze
