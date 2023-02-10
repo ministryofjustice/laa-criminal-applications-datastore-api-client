@@ -7,6 +7,7 @@ RSpec.describe DatastoreApi::HttpClient do
       logger: logger,
       api_root: 'https://api.com',
       api_path: '/api/v1',
+      auth_type: auth_type,
       basic_auth_username: 'test-user',
       basic_auth_password: 'test-pass',
       open_timeout: 5,
@@ -20,6 +21,8 @@ RSpec.describe DatastoreApi::HttpClient do
     logger.level = Logger::WARN
     logger
   }
+
+  let(:auth_type) { 'basic' }
 
   before do
     Faraday.default_adapter = :test
@@ -35,11 +38,20 @@ RSpec.describe DatastoreApi::HttpClient do
   # No need to check this in all requests, just once, as all are the same
   #
   def check_env(env)
+    if auth_type == 'basic'
+      headers = { "Authorization"=>"Basic dGVzdC11c2VyOnRlc3QtcGFzcw==", "User-Agent"=>"Rspec Tests" }
+    else
+      # Not actually checking the JWT token when auth_type = 'jwt'
+      # as to not introduce an additional dependency. This is best
+      # tested in the middleware itself (separate gem).
+      headers = { "User-Agent"=>"Rspec Tests" }
+    end
+
     expect(env.url.scheme).to eq('https')
     expect(env.url.host).to eq('api.com')
     expect(env.request.open_timeout).to eq(5)
     expect(env.request.timeout).to eq(10)
-    expect(env.request_headers).to eq("Authorization"=>"Basic dGVzdC11c2VyOnRlc3QtcGFzcw==", "User-Agent"=>"Rspec Tests")
+    expect(env.request_headers).to eq(headers)
   end
 
   describe '#get' do
@@ -57,6 +69,49 @@ RSpec.describe DatastoreApi::HttpClient do
 
       it 'executes the GET request to the given href, passing query params' do
         expect(subject.get('/test')).to eq(body)
+      end
+
+      context 'for a request with auth_type nil' do
+        let(:auth_type) { nil }
+
+        it 'executes the request without authorization header' do
+          expect_any_instance_of(Faraday::Connection).not_to receive(:request)
+          subject.get('/test')
+        end
+      end
+
+      context 'for a request with auth_type `basic`' do
+        let(:auth_type) { 'basic' }
+
+        it 'executes the request with basic authorization header' do
+          expect_any_instance_of(
+            Faraday::Connection
+          ).to receive(:request).with(
+            :authorization, :basic, 'test-user', 'test-pass'
+          ).and_call_original
+
+          subject.get('/test')
+        end
+      end
+
+      context 'for a request with auth_type `jwt`' do
+        let(:auth_type) { 'jwt' }
+
+        it 'executes the request passing a Bearer token' do
+          expect_any_instance_of(Faraday::Connection).to receive(:request).with(:jwt)
+          subject.get('/test')
+        end
+      end
+
+      context 'for a request with unknown auth_type' do
+        let(:request_stub) { Faraday::Adapter::Test::Stubs.new }
+        let(:auth_type) { 'foobar' }
+
+        it 'raises an error' do
+          expect {
+            subject.get('/test')
+          }.to raise_error(DatastoreApi::Errors::ConnectionError, /:foobar is not registered on Faraday::Request/)
+        end
       end
     end
 
