@@ -6,7 +6,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#logger' do
     context 'when no logger is specified' do
       it 'defaults to nil' do
-        expect(DatastoreApi.configuration.logger).to be_nil
+        expect(config.logger).to be_nil
       end
     end
 
@@ -18,7 +18,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.logger).to eq(custom_value)
+        expect(config.logger).to eq(custom_value)
       end
     end
   end
@@ -26,7 +26,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#api_root' do
     context 'when no api_root is specified' do
       it 'defaults to nil' do
-        expect(DatastoreApi.configuration.api_root).to be_nil
+        expect(config.api_root).to be_nil
       end
     end
 
@@ -38,7 +38,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.api_root).to eq(custom_value)
+        expect(config.api_root).to eq(custom_value)
       end
     end
   end
@@ -46,7 +46,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#api_path' do
     context 'when no api_path is specified' do
       it 'defaults to API v1' do
-        expect(DatastoreApi.configuration.api_path).to eq('/api/v1')
+        expect(config.api_path).to eq('/api/v1')
       end
     end
 
@@ -58,7 +58,27 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.api_root).to eq(custom_value)
+        expect(config.api_root).to eq(custom_value)
+      end
+    end
+  end
+
+  describe '#auth_type' do
+    context 'when no auth_type is specified' do
+      it 'defaults to `basic`' do
+        expect(config.auth_type).to eq(:basic)
+      end
+    end
+
+    context 'when a custom auth_type is specified' do
+      let(:custom_value) { :jwt }
+
+      before do
+        DatastoreApi.configure { |config| config.auth_type = custom_value }
+      end
+
+      it 'returns configured value' do
+        expect(config.auth_type).to eq(custom_value)
       end
     end
   end
@@ -66,7 +86,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#basic_auth_username' do
     context 'when no basic_auth_username is specified' do
       it 'defaults to nil' do
-        expect(DatastoreApi.configuration.basic_auth_username).to be_nil
+        expect(config.basic_auth_username).to be_nil
       end
     end
 
@@ -78,7 +98,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.basic_auth_username).to eq(custom_value)
+        expect(config.basic_auth_username).to eq(custom_value)
       end
     end
   end
@@ -86,7 +106,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#basic_auth_password' do
     context 'when no basic_auth_password is specified' do
       it 'defaults to nil' do
-        expect(DatastoreApi.configuration.basic_auth_password).to be_nil
+        expect(config.basic_auth_password).to be_nil
       end
     end
 
@@ -98,7 +118,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.basic_auth_password).to eq(custom_value)
+        expect(config.basic_auth_password).to eq(custom_value)
       end
     end
   end
@@ -106,7 +126,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#open_timeout' do
     context 'when no open_timeout is specified' do
       it 'has a default timeout' do
-        expect(DatastoreApi.configuration.open_timeout).to eq(10)
+        expect(config.open_timeout).to eq(10)
       end
     end
 
@@ -118,7 +138,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.open_timeout).to eq(custom_value)
+        expect(config.open_timeout).to eq(custom_value)
       end
     end
   end
@@ -126,7 +146,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#read_timeout' do
     context 'when no read_timeout is specified' do
       it 'has a default timeout' do
-        expect(DatastoreApi.configuration.read_timeout).to eq(20)
+        expect(config.read_timeout).to eq(20)
       end
     end
 
@@ -138,7 +158,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.read_timeout).to eq(custom_value)
+        expect(config.read_timeout).to eq(custom_value)
       end
     end
   end
@@ -147,7 +167,7 @@ RSpec.describe DatastoreApi::Configuration do
     context 'when no request_headers are specified' do
       it 'has default request_headers' do
         expect(
-          DatastoreApi.configuration.request_headers
+          config.request_headers
         ).to eq({
           'User-Agent' => "laa-criminal-applications-datastore-api-client v#{DatastoreApi::VERSION}",
           'Content-Type' => 'application/json',
@@ -164,7 +184,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.request_headers).to eq(custom_value)
+        expect(config.request_headers).to eq(custom_value)
       end
     end
   end
@@ -172,7 +192,7 @@ RSpec.describe DatastoreApi::Configuration do
   describe '#http_client_class' do
     context 'when no http_client_class is specified' do
       it 'defaults to the gem built-in client' do
-        expect(DatastoreApi.configuration.http_client_class).to eq(DatastoreApi::HttpClient)
+        expect(config.http_client_class).to eq(DatastoreApi::HttpClient)
       end
     end
 
@@ -184,7 +204,7 @@ RSpec.describe DatastoreApi::Configuration do
       end
 
       it 'returns configured value' do
-        expect(DatastoreApi.configuration.http_client_class).to eq(custom_value)
+        expect(config.http_client_class).to eq(custom_value)
       end
     end
   end

@@ -5,6 +5,7 @@ module DatastoreApi
     attr_accessor :logger,
                   :api_root,
                   :api_path,
+                  :auth_type,
                   :basic_auth_username,
                   :basic_auth_password,
                   :open_timeout,
@@ -14,6 +15,10 @@ module DatastoreApi
 
     def initialize
       @api_path = '/api/v1'
+
+      # Defaults to `basic` for backwards compatibility
+      # but in a future release of the gem this will be `nil`
+      @auth_type = :basic
 
       @open_timeout = 10   # connection timeout in seconds
       @read_timeout = 20   # read timeout in seconds

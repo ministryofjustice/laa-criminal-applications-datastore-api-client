@@ -66,14 +66,23 @@ module DatastoreApi
       parsed_body
     end
 
+    def auth_strategy
+      auth_type = config.auth_type.to_sym
+
+      case auth_type
+      when :basic
+        [:authorization, :basic, config.basic_auth_username, config.basic_auth_password]
+      else
+        [auth_type]
+      end
+    end
+
     def connection
       Faraday.new(url: config.api_root) do |conn|
-        conn.request(
-          :authorization, :basic, config.basic_auth_username, config.basic_auth_password
-        )
+        conn.request(*auth_strategy) if config.auth_type
 
         conn.response(:logger, options.fetch(:logger, config.logger), bodies: false) do |logger|
-          logger.filter(/(Authorization:) "(Basic .*)"/, '\1[REDACTED]')
+          logger.filter(/(Authorization:) "(Basic|Bearer) (.*)"/, '\1[REDACTED]')
         end
 
         conn.options.open_timeout = options.fetch(
