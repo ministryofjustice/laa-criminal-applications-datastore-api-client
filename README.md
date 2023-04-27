@@ -101,6 +101,9 @@ DatastoreApi::Requests::SearchApplications.new(
   search_text: 'John', 
   pagination: { per_page: 5, page: 2 }
 ).call
+
+# Health check endpoint
+DatastoreApi::Requests::Healthcheck.call
 ```
 
 ## Development
