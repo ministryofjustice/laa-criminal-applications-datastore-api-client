@@ -40,7 +40,7 @@ module DatastoreApi
 
       def endpoint
         format(
-          '/applications/%<resource_path>s', resource_path: resource_path
+          '/applications/%<resource_path>s', resource_path:
         )
       end
 

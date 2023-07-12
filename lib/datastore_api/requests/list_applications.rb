@@ -41,7 +41,7 @@ module DatastoreApi
       private
 
       def query
-        { status: status }.merge(query_params)
+        { status: }.merge(query_params)
       end
     end
   end
