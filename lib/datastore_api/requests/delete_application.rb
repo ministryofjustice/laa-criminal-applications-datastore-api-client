@@ -33,7 +33,7 @@ module DatastoreApi
 
       def endpoint
         format(
-          '/applications/%<application_id>s', application_id: application_id
+          '/applications/%<application_id>s', application_id:
         )
       end
     end
