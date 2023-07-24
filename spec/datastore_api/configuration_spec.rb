@@ -54,11 +54,11 @@ RSpec.describe DatastoreApi::Configuration do
       let(:custom_value) { '/api/v2' }
 
       before do
-        DatastoreApi.configure { |config| config.api_root = custom_value }
+        DatastoreApi.configure { |config| config.api_path = custom_value }
       end
 
       it 'returns configured value' do
-        expect(config.api_root).to eq(custom_value)
+        expect(config.api_path).to eq(custom_value)
       end
     end
   end
