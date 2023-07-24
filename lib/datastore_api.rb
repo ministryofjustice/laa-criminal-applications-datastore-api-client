@@ -24,5 +24,7 @@ require_relative 'datastore_api/requests/delete_application'
 require_relative 'datastore_api/responses/application_result'
 require_relative 'datastore_api/responses/healthcheck_result'
 
+require_relative '../engines/health_engine' if defined?(Rails)
+
 module DatastoreApi
 end
