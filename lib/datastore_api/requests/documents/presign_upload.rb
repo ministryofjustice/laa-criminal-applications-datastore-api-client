@@ -11,11 +11,13 @@ module DatastoreApi
 
         # Instantiate a presigned document upload
         #
-        # @param usn [String] Application unique sequence number
+        # @param usn [Integer] Application unique sequence number
         # @param application_id [String] Application UUID
         # @param s3_opts [Hash] Additional S3 options, like `expires_in`
         #
-        # @raise [ArgumentError] if +object_key+ is missing or +nil+
+        # @raise [ArgumentError] if +usn+ is missing or +nil+
+        # @raise [ArgumentError] if +application_id+ is missing or +nil+
+        # @raise [ArgumentError] if +filename+ is missing or +nil+
         #
         # @return [DatastoreApi::Requests::Documents::PresignUpload] instance
         #
