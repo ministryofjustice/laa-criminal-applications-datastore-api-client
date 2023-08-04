@@ -6,7 +6,7 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignUpload do
   let(:http_client) { instance_double(DatastoreApi::HttpClient, put: {}) }
 
   let(:args) {
-    { usn: 123, application_id: 'xyz', filename: 'payslip.pdf', expires_in: 15 }
+    { usn: 123, filename: 'payslip.pdf', expires_in: 15 }
   }
 
   describe '#action' do
@@ -21,16 +21,6 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignUpload do
         expect {
           subject.call
         }.to raise_error(ArgumentError, '`usn` cannot be nil')
-      end
-    end
-
-    context 'application_id is not provided' do
-      let(:args) { super().merge(application_id: nil) }
-
-      it 'raises an error if the application_id is nil' do
-        expect {
-          subject.call
-        }.to raise_error(ArgumentError, '`application_id` cannot be nil')
       end
     end
 
@@ -59,7 +49,7 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignUpload do
     context 'endpoint' do
       it 'uses the correct endpoint' do
         expect(http_client).to receive(:put).with(
-          '/documents/presign_upload', { object_key: '123/xyz/payslip.pdf', s3_opts: { expires_in: 15 } }
+          '/documents/presign_upload', { object_key: '123/payslip.pdf', s3_opts: { expires_in: 15 } }
         )
 
         subject.call

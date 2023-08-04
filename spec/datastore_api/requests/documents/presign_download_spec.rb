@@ -6,7 +6,7 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignDownload do
   let(:http_client) { instance_double(DatastoreApi::HttpClient, put: {}) }
 
   let(:args) {
-    { object_key: '123/xyz/foobar', expires_in: 15 }
+    { object_key: '123/payslip.pdf', expires_in: 15 }
   }
 
   describe '#action' do
@@ -37,7 +37,7 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignDownload do
     context 'endpoint' do
       it 'uses the correct endpoint' do
         expect(http_client).to receive(:put).with(
-          '/documents/presign_download', { object_key: '123/xyz/foobar', s3_opts: { expires_in: 15 } }
+          '/documents/presign_download', { object_key: '123/payslip.pdf', s3_opts: { expires_in: 15 } }
         )
 
         subject.call
