@@ -6,11 +6,21 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignUpload do
   let(:http_client) { instance_double(DatastoreApi::HttpClient, put: {}) }
 
   let(:args) {
-    { usn: 123, filename: 'payslip.pdf', expires_in: 15 }
+    { usn: 123, expires_in: 15 }
   }
 
   describe '#action' do
     it { expect(subject.action).to eq('presign_upload') }
+  end
+
+  describe '#object_key' do
+    it 'is composed of the USN and 10 random alphanumeric chars, joined by forward slash' do
+      expect(subject.object_key).to match(/\A123\/[[:alnum:]]{10}\z/)
+    end
+
+    it 'does not change `object_key` while using the same instance' do
+      expect(subject.object_key).to eq(subject.object_key)
+    end
   end
 
   describe '.new' do
@@ -21,16 +31,6 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignUpload do
         expect {
           subject.call
         }.to raise_error(ArgumentError, '`usn` cannot be nil')
-      end
-    end
-
-    context 'filename is not provided' do
-      let(:args) { super().merge(filename: nil) }
-
-      it 'raises an error if the filename is nil' do
-        expect {
-          subject.call
-        }.to raise_error(ArgumentError, '`filename` cannot be nil')
       end
     end
   end
@@ -47,9 +47,13 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignUpload do
     end
 
     context 'endpoint' do
+      before do
+        allow(SecureRandom).to receive(:alphanumeric).with(10).and_return('abcdef1234')
+      end
+
       it 'uses the correct endpoint' do
         expect(http_client).to receive(:put).with(
-          '/documents/presign_upload', { object_key: '123/payslip.pdf', s3_opts: { expires_in: 15 } }
+          '/documents/presign_upload', { object_key: '123/abcdef1234', s3_opts: { expires_in: 15 } }
         )
 
         subject.call

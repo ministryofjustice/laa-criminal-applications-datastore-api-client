@@ -22,6 +22,10 @@ module DatastoreApi
       def action
         raise 'implement in classes that include this trait module'
       end
+
+      def object_key
+        raise 'implement in classes that include this trait module'
+      end
       # :nocov:
 
       private
