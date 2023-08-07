@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'faraday/multipart'
 
 module DatastoreApi
   class HttpClient
@@ -18,9 +19,9 @@ module DatastoreApi
       end
     end
 
-    def post(href, payload = {})
-      execute_request!(:post, href) do |req|
-        req.body = JSON.dump(payload)
+    def post(href, payload = {}, opts = {})
+      execute_request!(:post, href, opts) do |req|
+        req.body = opts[:multipart] ? payload : JSON.dump(payload)
       end
     end
 
@@ -42,10 +43,12 @@ module DatastoreApi
       DatastoreApi.configuration
     end
 
-    def execute_request!(verb, href)
+    def execute_request!(verb, href, opts = {})
       response = connection.send(verb) do |req|
         req.url(config.api_path + href)
+
         req.headers.update(config.request_headers)
+        req.headers['Content-Type'] = 'multipart/form-data' if opts[:multipart]
 
         yield(req) if block_given?
       end
@@ -80,6 +83,7 @@ module DatastoreApi
     def connection
       Faraday.new(url: config.api_root) do |conn|
         conn.request(*auth_strategy) if config.auth_type
+        conn.request(:multipart)
 
         conn.response(:logger, options.fetch(:logger, config.logger), bodies: false) do |logger|
           logger.filter(/(Authorization:) "(Basic|Bearer) (.*)"/, '\1[REDACTED]')

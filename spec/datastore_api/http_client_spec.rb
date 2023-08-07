@@ -23,6 +23,7 @@ RSpec.describe DatastoreApi::HttpClient do
   }
 
   let(:auth_type) { 'basic' }
+  let(:multipart_post) { false }
 
   before do
     Faraday.default_adapter = :test
@@ -38,20 +39,32 @@ RSpec.describe DatastoreApi::HttpClient do
   # No need to check this in all requests, just once, as all are the same
   #
   def check_env(env)
-    if auth_type == 'basic'
-      headers = { "Authorization"=>"Basic dGVzdC11c2VyOnRlc3QtcGFzcw==", "User-Agent"=>"Rspec Tests" }
-    else
-      # Not actually checking the JWT token when auth_type = 'jwt'
-      # as to not introduce an additional dependency. This is best
-      # tested in the middleware itself (separate gem).
-      headers = { "User-Agent"=>"Rspec Tests" }
-    end
-
     expect(env.url.scheme).to eq('https')
     expect(env.url.host).to eq('api.com')
     expect(env.request.open_timeout).to eq(5)
     expect(env.request.timeout).to eq(10)
-    expect(env.request_headers).to eq(headers)
+
+    # Not actually checking the JWT token when auth_type = 'jwt'
+    # as to not introduce an additional dependency. This is best
+    # tested in the middleware itself (separate gem).
+    # We only test here the basic auth type.
+    if auth_type == 'basic'
+      expect(env.request_headers['Authorization']).to eq('Basic dGVzdC11c2VyOnRlc3QtcGFzcw==')
+    else
+      expect(env.request_headers['Authorization']).to be_nil
+    end
+
+    if multipart_post
+      expect(
+        env.request_headers.keys
+      ).to match_array(%w[Authorization User-Agent Content-Length Content-Type])
+
+      expect(
+        env.request_headers['Content-Type']
+      ).to match(/multipart\/form-data; boundary=-----------RubyMultipartPost/)
+    else
+      expect(env.request_headers['Content-Type']).to be_nil
+    end
   end
 
   describe '#get' do
@@ -75,13 +88,17 @@ RSpec.describe DatastoreApi::HttpClient do
         let(:auth_type) { nil }
 
         it 'executes the request without authorization header' do
-          expect_any_instance_of(Faraday::Connection).not_to receive(:request)
+          expect_any_instance_of(Faraday::Connection).not_to receive(:request).with(:jwt)
           subject.get('/test')
         end
       end
 
       context 'for a request with auth_type `basic`' do
         let(:auth_type) { 'basic' }
+
+        before do
+          allow_any_instance_of(Faraday::Connection).to receive(:request)
+        end
 
         it 'executes the request with basic authorization header' do
           expect_any_instance_of(
@@ -96,6 +113,10 @@ RSpec.describe DatastoreApi::HttpClient do
 
       context 'for a request with auth_type `jwt`' do
         let(:auth_type) { 'jwt' }
+
+        before do
+          allow_any_instance_of(Faraday::Connection).to receive(:request)
+        end
 
         it 'executes the request passing a Bearer token' do
           expect_any_instance_of(Faraday::Connection).to receive(:request).with(:jwt)
@@ -150,21 +171,45 @@ RSpec.describe DatastoreApi::HttpClient do
   # in the GET requests. Refer to the above scenarios.
   #
   describe '#post' do
-    context 'for a successful request' do
-      let(:body) { { 'foo' => 'bar' } }
-      let(:payload) { { 'name' => 'John Doe' } }
+    context 'for a normal post' do
+      context 'for a successful request' do
+        let(:body) { { 'foo' => 'bar' } }
+        let(:payload) { { 'name' => 'John Doe' } }
 
-      let(:request_stub) {
-        Faraday::Adapter::Test::Stubs.new do |stub|
-          stub.post('/api/v1/test') do |env|
-            check_env(env)
-            [201, {}, body.to_json]
+        let(:request_stub) {
+          Faraday::Adapter::Test::Stubs.new do |stub|
+            stub.post('/api/v1/test') do |env|
+              check_env(env)
+              [201, {}, body.to_json]
+            end
           end
-        end
-      }
+        }
 
-      it 'executes the POST request to the given href, passing the payload' do
-        expect(subject.post('/test', payload)).to eq(body)
+        it 'executes the POST request to the given href, passing the payload' do
+          expect(subject.post('/test', payload)).to eq(body)
+        end
+      end
+    end
+
+    context 'for a multipart post' do
+      let(:multipart_post) { true }
+
+      context 'for a successful request' do
+        let(:body) { { 'foo' => 'bar' } }
+        let(:payload) { { 'name' => 'John Doe' } }
+
+        let(:request_stub) {
+          Faraday::Adapter::Test::Stubs.new do |stub|
+            stub.post('/api/v1/test') do |env|
+              check_env(env)
+              [201, {}, body.to_json]
+            end
+          end
+        }
+
+        it 'executes the POST request to the given href, passing the payload' do
+          expect(subject.post('/test', payload, { multipart: true })).to eq(body)
+        end
       end
     end
   end
