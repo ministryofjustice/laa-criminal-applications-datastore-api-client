@@ -7,7 +7,7 @@ module DatastoreApi
         include Traits::ApiRequest
         include Traits::S3PresignedUrl
 
-        attr_reader :usn, :filename, :s3_opts
+        attr_reader :usn, :s3_opts
 
         # Instantiate a presigned document upload
         #
@@ -15,16 +15,13 @@ module DatastoreApi
         # @param s3_opts [Hash] Additional S3 options, like `expires_in`
         #
         # @raise [ArgumentError] if +usn+ is missing or +nil+
-        # @raise [ArgumentError] if +filename+ is missing or +nil+
         #
         # @return [DatastoreApi::Requests::Documents::PresignUpload] instance
         #
-        def initialize(usn:, filename:, **s3_opts)
+        def initialize(usn:, **s3_opts)
           raise ArgumentError, '`usn` cannot be nil' unless usn
-          raise ArgumentError, '`filename` cannot be nil' unless filename
 
           @usn = usn
-          @filename = filename
           @s3_opts = s3_opts
         end
 
@@ -32,10 +29,14 @@ module DatastoreApi
           'presign_upload'
         end
 
-        private
-
         def object_key
           [usn, filename].join('/')
+        end
+
+        private
+
+        def filename
+          @filename ||= SecureRandom.alphanumeric(10)
         end
       end
     end

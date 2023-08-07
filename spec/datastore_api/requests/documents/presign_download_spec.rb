@@ -13,6 +13,10 @@ RSpec.describe DatastoreApi::Requests::Documents::PresignDownload do
     it { expect(subject.action).to eq('presign_download') }
   end
 
+  describe '#object_key' do
+    it { expect(subject.object_key).to eq(args[:object_key]) }
+  end
+
   describe '.new' do
     let(:args) { { object_key: nil } }
 
