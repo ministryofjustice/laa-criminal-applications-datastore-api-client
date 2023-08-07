@@ -22,9 +22,9 @@ require_relative 'datastore_api/requests/search_applications'
 require_relative 'datastore_api/requests/update_application'
 require_relative 'datastore_api/requests/delete_application'
 
-# require_relative 'datastore_api/requests/documents/list'
+require_relative 'datastore_api/requests/documents/list'
+require_relative 'datastore_api/requests/documents/delete'
 # require_relative 'datastore_api/requests/documents/upload'
-# require_relative 'datastore_api/requests/documents/delete'
 require_relative 'datastore_api/requests/documents/presign_upload'
 require_relative 'datastore_api/requests/documents/presign_download'
 
