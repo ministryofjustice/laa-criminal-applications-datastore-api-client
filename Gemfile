@@ -6,5 +6,5 @@ gemspec
 gem 'rails'
 gem 'rake'
 gem 'rspec'
-gem 'rubocop'
+gem 'rubocop', '>= 1.55.0'
 gem 'simplecov'
