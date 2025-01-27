@@ -1,0 +1,10 @@
+<li class='<%= "govuk-pagination__item #{'govuk-pagination__item--current' if page.current?}" %>'>
+  <%= button_to(
+        page,
+        "?page=#{page}#pagination",
+        params: sorted_filter_params.merge(page:),
+        class: 'govuk-link govuk-pagination__link app-button--link',
+        method: request.method.downcase,
+        aria: { label: t('.page', page:), current: ('page' if page.current?) }
+      ) %>
+</li>
