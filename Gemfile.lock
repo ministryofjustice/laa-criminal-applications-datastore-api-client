@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    laa-criminal-applications-datastore-api-client (1.2.2)
+    laa-criminal-applications-datastore-api-client (1.2.3)
       faraday (~> 2.7)
       moj-simple-jwt-auth (~> 0.1.0)
 
