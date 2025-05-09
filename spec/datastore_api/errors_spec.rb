@@ -11,9 +11,9 @@ RSpec.describe DatastoreApi::Errors do
       let(:status) { 400 }
 
       it 'raises the exception' do
-        expect {
+        expect do
           subject.raise_error!(dummy_body, status)
-        }.to raise_error(DatastoreApi::Errors::BadRequest, expected_msg)
+        end.to raise_error(DatastoreApi::Errors::BadRequest, expected_msg)
       end
     end
 
@@ -21,9 +21,9 @@ RSpec.describe DatastoreApi::Errors do
       let(:status) { 401 }
 
       it 'raises the exception' do
-        expect {
+        expect do
           subject.raise_error!(dummy_body, status)
-        }.to raise_error(DatastoreApi::Errors::Unauthorized, expected_msg)
+        end.to raise_error(DatastoreApi::Errors::Unauthorized, expected_msg)
       end
     end
 
@@ -31,9 +31,19 @@ RSpec.describe DatastoreApi::Errors do
       let(:status) { 404 }
 
       it 'raises the exception' do
-        expect {
+        expect do
           subject.raise_error!(dummy_body, status)
-        }.to raise_error(DatastoreApi::Errors::NotFoundError, expected_msg)
+        end.to raise_error(DatastoreApi::Errors::NotFoundError, expected_msg)
+      end
+    end
+
+    context 'ConflictError error' do
+      let(:status) { 409 }
+
+      it 'raises the exception' do
+        expect do
+          subject.raise_error!(dummy_body, status)
+        end.to raise_error(DatastoreApi::Errors::ConflictError, expected_msg)
       end
     end
 
@@ -41,9 +51,9 @@ RSpec.describe DatastoreApi::Errors do
       let(:status) { 422 }
 
       it 'raises the exception' do
-        expect {
+        expect do
           subject.raise_error!(dummy_body, status)
-        }.to raise_error(DatastoreApi::Errors::InvalidRequest, expected_msg)
+        end.to raise_error(DatastoreApi::Errors::InvalidRequest, expected_msg)
       end
     end
 
@@ -51,9 +61,9 @@ RSpec.describe DatastoreApi::Errors do
       let(:status) { 500 }
 
       it 'raises the exception' do
-        expect {
+        expect do
           subject.raise_error!(dummy_body, status)
-        }.to raise_error(DatastoreApi::Errors::ServerError, expected_msg)
+        end.to raise_error(DatastoreApi::Errors::ServerError, expected_msg)
       end
     end
 
@@ -61,9 +71,9 @@ RSpec.describe DatastoreApi::Errors do
       let(:status) { 502 }
 
       it 'raises a generic ApiError exception' do
-        expect {
+        expect do
           subject.raise_error!(dummy_body, status)
-        }.to raise_error(DatastoreApi::Errors::ApiError, expected_msg)
+        end.to raise_error(DatastoreApi::Errors::ApiError, expected_msg)
       end
     end
   end

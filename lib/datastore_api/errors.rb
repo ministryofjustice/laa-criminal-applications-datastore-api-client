@@ -9,6 +9,7 @@ module DatastoreApi
       when 400 then raise BadRequest, message
       when 401 then raise Unauthorized, message
       when 404 then raise NotFoundError, message
+      when 409 then raise ConflictError, message
       when 422 then raise InvalidRequest, message
       when 500 then raise ServerError, message
       else
@@ -26,5 +27,6 @@ module DatastoreApi
     class NotFoundError < ClientError; end
     class InvalidRequest < ClientError; end
     class Unauthorized < ClientError; end
+    class ConflictError < ClientError; end
   end
 end
