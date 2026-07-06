@@ -29,5 +29,5 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 3.3.4'
 
   spec.add_dependency 'faraday', '~> 2.7'
-  spec.add_dependency 'moj-simple-jwt-auth', '~> 0.1.0'
+  spec.add_dependency 'moj-simple-jwt-auth', '~> 0.2.0'
 end
