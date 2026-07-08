@@ -1,12 +1,3 @@
-GIT
-  remote: https://github.com/ministryofjustice/moj-simple-jwt-auth.git
-  revision: bcb92d0d65b4cf2765de1619f403f5664cc9c81b
-  tag: v0.2.0
-  specs:
-    moj-simple-jwt-auth (0.2.0)
-      json
-      jwt
-
 PATH
   remote: .
   specs:
@@ -140,6 +131,9 @@ GEM
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
+    moj-simple-jwt-auth (0.2.0)
+      json
+      jwt
     net-http (0.9.1)
       uri (>= 0.11.1)
     net-imap (0.6.4.1)
@@ -292,7 +286,6 @@ PLATFORMS
 
 DEPENDENCIES
   laa-criminal-applications-datastore-api-client!
-  moj-simple-jwt-auth!
   rails
   rake
   rspec
