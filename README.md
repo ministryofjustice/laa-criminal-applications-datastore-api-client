@@ -14,15 +14,15 @@ It will support more operations in the future, or extend the existing ones, as w
 
 ## Installation
 
-For now this gem is not being published to rubygems as it is under heavy development so to use it just add 
-the following to your Gemfile:
+The gem is available on [RubyGems](https://rubygems.org/gems/laa-criminal-applications-datastore-api-client).
+Add it to your Gemfile:
 
 ```ruby
-gem 'laa-criminal-applications-datastore-api-client', 
-    github: 'ministryofjustice/laa-criminal-applications-datastore-api-client'
+gem 'laa-criminal-applications-datastore-api-client', '1.3.0',
+    require: 'datastore_api'
 ```
 
-You can lock it to a specific branch or sha if you want too.
+Then run `bundle install`.
 
 ## Usage
 
