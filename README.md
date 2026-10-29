@@ -112,6 +112,56 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 This gem uses rubocop and simplecov (at 100% coverage).
 
+## Publishing a release
+
+New versions are published to RubyGems manually. Update `DatastoreApi::VERSION` in
+`lib/datastore_api/version.rb`, merge the change, and confirm CI has passed for that
+commit. Create and push a matching Git tag, such as `v1.3.1`.
+
+Use Ruby 3.3.4 or newer and a RubyGems account with publishing access to this gem and
+MFA enabled. If you have not already authenticated on your machine, run:
+
+```sh
+gem signin
+```
+
+The following example publishes `1.3.1`. Replace the version and tag with the
+release you are publishing. Continue to each step only after the previous one
+succeeds.
+
+1. Start with a clean working tree, then fetch and check out the release tag:
+
+   ```sh
+   git fetch origin tag v1.3.1
+   git switch --detach v1.3.1
+   ```
+
+2. Check the gem version:
+
+   ```sh
+   ruby -r ./lib/datastore_api/version -e 'puts DatastoreApi::VERSION'
+   ```
+
+   This must print `1.3.1` for the `v1.3.1` tag. Stop if the version does not match.
+
+3. Build the gem:
+
+   ```sh
+   gem build --strict laa-criminal-applications-datastore-api-client.gemspec
+   ```
+
+4. Push the generated package to RubyGems and complete any MFA prompt:
+
+   ```sh
+   gem push laa-criminal-applications-datastore-api-client-1.3.1.gem --host https://rubygems.org
+   ```
+
+5. Confirm the new version appears on the
+   [RubyGems page](https://rubygems.org/gems/laa-criminal-applications-datastore-api-client).
+   Published versions cannot be overwritten; each release needs a new version.
+
+After publishing, return to your previous branch with `git switch -`.
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
